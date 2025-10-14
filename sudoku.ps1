@@ -19,10 +19,10 @@ $b = @(
 )
 #>
 
-$b = @(
+$Global:board = @(
     @(1, 2, 3),
     @(2, 3, 1),
-    @(3, 1, 2)
+    @(3, '.', 2)
 )
 
 function Pick-Num {
@@ -46,18 +46,20 @@ function Pick-Num {
 }
 
 function Is-Valid {
-	param ($row, $col)
+	param ($row, $col, $n)
 	
 	$q = $(1..3 | Measure-Object -Sum).Sum
 
 	$t1 = 0
-	$b[$row] | %{ $t1 += $_ }	
+	$b[$row] | %{ if ($_ -ne '.') { $t1 += $_ } }	
 	
 	if ($t1 -ne $q) { return $false }
 	
 	$t2 = 0
 	for ($r = 0; $r -lt 3; $r++) {
-		$t2 += $b[$r][$col]
+		if ($b[$r][$col] -ne '.') {
+			$t2 += $b[$r][$col]
+		}
 	}
 	
 	if ($t2 -ne $q) { return $false }
@@ -65,13 +67,51 @@ function Is-Valid {
 	return $true
 }
 
-
-
-function Sudoku-Solver {
-
+function Find-Empty-Cell {
+	for ($i = 0; $i -lt 3; $i++) {
+		for ($j = 0; $j -lt 3; $j++) {
+			if ($board[$i][$j] -eq '.') {
+				return $i, $j
+			}
+		}
+	}
+	return
 }
 
-Is-Valid 2 2
+function Sudoku-Solver {
+	#param ($board)
+	
+	$empty = Find-Empty-Cell
+	if (-not $empty) {
+		return $true
+	}
+	
+	$row, $col = $empty
+	
+	foreach ($n in 1..3) {
+		if (Is-Valid $row $col $n) {
+			$board[$row][$col] = $n
+			if (Sudoku-Solver) {
+				return $true
+			}
+			$board[$row][$col] = '.'
+		}
+	}
+	
+	return $false
+}
+
+function Print-Board {
+	#param ($board)
+	for ($i = 0; $i -lt 3; $i++) {
+		$board[$i] -join ''
+	}
+}
+
+#Is-Valid 2 2
+#find-empty-cell
+Sudoku-Solver | Out-Null
+Print-Board
 
 
 
