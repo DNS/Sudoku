@@ -15,27 +15,6 @@ $board = @(
 
 
 
-<#
-function Pick-Num {
-	param ($row, $col)
-	
-	$nums = [System.Collections.ArrayList]::new(1..3)
-	
-	for ($r = 0; $r -lt 9; $r++) {
-		if ($b[$r][$col] -ne '.') {
-			$nums.Remove( $b[$r][$col] )
-		}
-	}
-	
-	for ($c = 0; $c -lt 9; $c++) {
-		if ($b[$row][$c] -ne '.') {
-			$nums.Remove( $b[$row][$c] )
-		}
-	}
-	
-	return $nums[0]
-}
-#>
 
 function Is-Valid {
 	param ($row, $col, $num)
