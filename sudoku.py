@@ -39,7 +39,13 @@ class Solution:
 			if str(self.board[r][col]) == str(num):
 				return False
 		
-		
+		# 3×3 check
+		start_row, start_col = 3 * (row // 3), 3 * (col // 3)
+		for r in range(start_row, start_row + 3):
+			for c in range(start_col, start_col + 3):
+				if board[r][c] == num:
+					return False
+					
 		return True
 
 
