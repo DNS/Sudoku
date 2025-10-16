@@ -30,7 +30,8 @@
 		int startCol = (col / 3) * 3;
 		for (int i = startRow; i < startRow + 3; i++) {
 			for (int j = startCol; j < startCol + 3; j++) {
-				if (board[i][j] == num) return false;
+				if (board[i][j] == num)
+					return false;
 			}
 		}
 		return true;
