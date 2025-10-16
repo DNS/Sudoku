@@ -1,89 +1,57 @@
-﻿from typing import *
+﻿class Solution:
+	@staticmethod
+	def solveSudoku(board: list[list[str]]) -> None:
+		Solution._solve(board)
 
-class Solution:
-	def solveSudoku (self, board: List[List[str]]) -> None:
-		self.board = board
-		
-		empty = self.FindEmptyCell()
-		if not empty:
-			return True
-			
-		row, col = empty
-		
-		for n in range(1, 10):
-			if self.IsValid(row, col, str(n)):
-				self.board[row][col] = str(n)
-				s = Solution()
-				if s.solveSudoku(self.board):
-					return True
-				s.board[row][col] = '.'
-
-		
-		
-		return None
-        
-
-
-
-
-
-	def IsValid (self, row, col, num):
-		# row check
-			
-		for c in range(9):
-			if str(self.board[row][c]) == str(num):
-				return False
-
-		# column check
-		for r in range(9):
-			if str(self.board[r][col]) == str(num):
-				return False
-		
-		# 3×3 check
-		start_row, start_col = 3 * (row // 3), 3 * (col // 3)
-		for r in range(start_row, start_row + 3):
-			for c in range(start_col, start_col + 3):
-				if board[r][c] == num:
+	@staticmethod
+	def _solve(board: list[list[str]]) -> bool:
+		for row in range(9):
+			for col in range(9):
+				if board[row][col] == '.':
+					for num in map(str, range(1, 10)):
+						if Solution._is_valid(board, row, col, num):
+							board[row][col] = num
+							if Solution._solve(board):
+								return True
+							board[row][col] = '.'
 					return False
-					
+		return True
+
+	@staticmethod
+	def _is_valid(board: list[list[str]], row: int, col: int, num: str) -> bool:
+		# check row and column
+		for i in range(9):
+			if board[row][i] == num or board[i][col] == num:
+				return False
+
+		# check 3×3 sub‑grid
+		start_row, start_col = (row // 3) * 3, (col // 3) * 3
+		for i in range(start_row, start_row + 3):
+			for j in range(start_col, start_col + 3):
+				if board[i][j] == num:
+					return False
 		return True
 
 
-	def FindEmptyCell (self):
-		for i in range(9):
-			for j in range(9):
-				if self.board[i][j] == '.':
-					return i, j
-		return None
 
+if __name__ == "__main__":
+	'''
+	board = [
+		['5', '3', '.', '.', '7', '.', '.', '.', '.'],
+		['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+		['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+		['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+		['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+		['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+		['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+		['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+		['.', '.', '.', '.', '8', '.', '.', '7', '9']
+	]
+	'''    
+	board = [[".",".",".",".",".",".",".",".","."],[".","9",".",".","1",".",".","3","."],[".",".","6",".","2",".","7",".","."],[".",".",".","3",".","4",".",".","."],["2","1",".",".",".",".",".","9","8"],[".",".",".",".",".",".",".",".","."],[".",".","2","5",".","6","4",".","."],[".","8",".",".",".",".",".","1","."],[".",".",".",".",".",".",".",".","."]]
 
+	Solution.solveSudoku(board)
 
-
-	def PrintBoard (self):
-		for i in range(9):
-			print(''.join(self.board[i]))
-
-
-
-##################################
-
-# MAIN
-
-board = [
-	["5","3",".",".","7",".",".",".","."],
-	["6",".",".","1","9","5",".",".","."],
-	[".","9","8",".",".",".",".","6","."],
-	["8",".",".",".","6",".",".",".","3"],
-	["4",".",".","8",".","3",".",".","1"],
-	["7",".",".",".","2",".",".",".","6"],
-	[".","6",".",".",".",".","2","8","."],
-	[".",".",".","4","1","9",".",".","5"],
-	[".",".",".",".","8",".",".","7","9"]
-]
-
-s = Solution()
-s.solveSudoku(board)
-s.PrintBoard()
-
-
+	for row in board:
+		print(' '.join(row))
 
