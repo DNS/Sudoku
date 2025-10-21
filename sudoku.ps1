@@ -1,20 +1,19 @@
 ﻿
 function solveSudoku {
-	param ($board)
+	param ($arg1)
+	$Global:board = $arg1
 	
-	solve $board
+	solve
 }
 
-function solve {
-	param ($board)
-	
+function solve {	
 	for ($row = 0; $row -lt 9; $row++) {
 		for ($col = 0; $col -lt 9; $col++) {
 			if ($board[$row][$col] -eq '.') {
 				for ($num = 1; $num -le 9; $num++) {
-					if (isValid $board $row $col $num) {
+					if (Is-Valid $row $col $num) {
 						$board[$row][$col] = $num;
-						if (solve $board) { 
+						if (solve) { 
 							return $true
 						}
 						$board[$row][$col] = '.';
@@ -25,12 +24,11 @@ function solve {
 		}
 	}
 	
-	PrintBoard $board
 	return $true;
 }
 
-function isValid  {
-	param ($board, $row, $col, $num)
+function Is-Valid  {
+	param ($row, $col, $num)
 	$num = [string] $num
 	
 	for ($i = 0; $i -lt 9; $i++) {
@@ -52,16 +50,13 @@ function isValid  {
 	return $true;
 }
 
-function PrintBoard {
-	param ($board)
-	
+function Print-Board {
 	for ($i = 0; $i -lt 9; $i++) {
-		#for ($j = $startCol; $j -lt 9; $j++) {
-			Write-Host $($board[$i] -join '')
-		#}
+			Write-Host $($board[$i] -join ' ')
 	}
 }
 
+<#
 $b = @(
 	@('5','3','.','.','7','.','.','.','.'),
 	@('6','.','.','1','9','5','.','.','.'),
@@ -73,6 +68,7 @@ $b = @(
 	@('.','.','.','4','1','9','.','.','5'),
 	@('.','.','.','.','8','.','.','7','9')
 )
+#>
 
 $b = @(
 	@(".",".",".",".",".",".",".",".","."),
@@ -87,6 +83,5 @@ $b = @(
 )
 
 solveSudoku $b | Out-Null
-
-
+Print-Board
 
